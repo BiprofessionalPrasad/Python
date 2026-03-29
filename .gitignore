@@ -1,0 +1,136 @@
+# ===========================================
+# Python
+# ===========================================
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ===========================================
+# Virtual Environment
+# ===========================================
+venv/
+ENV/
+env/
+.venv/
+pyvenv.cfg
+
+# ===========================================
+# IDE
+# ===========================================
+# VS Code
+.vscode/
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# ===========================================
+# Environment Variables (CRITICAL!)
+# ===========================================
+.env
+.env.local
+.env.*.local
+*.env
+
+# ===========================================
+# Secrets & Credentials
+# ===========================================
+client-secrets.json
+*.pem
+*.key
+credentials.json
+service_account.json
+config.txt
+
+# ===========================================
+# Logs & Databases
+# ===========================================
+*.log
+*.sql
+*.sqlite
+*.sqlite3
+*.db
+
+# ===========================================
+# OS Generated Files
+# ===========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ===========================================
+# Data Files (Optional - adjust as needed)
+# ===========================================
+# Uncomment if you don't want to track large data files
+# *.csv
+# *.xlsx
+# *.xls
+# *.json
+# *.parquet
+# *.pdf
+
+# ===========================================
+# Project-Specific
+# ===========================================
+# Temporary files
+*.tmp
+*.temp
+~*
+
+# Backup files
+*.bak
+*~
+
+# Output directories
+output/
+outputs/
+results/
+exports/
+
+# ===========================================
+# Keep these (exceptions to wildcard rules)
+# ===========================================
+!.env.example
+!.gitignore
+!requirements.txt
+!README.md

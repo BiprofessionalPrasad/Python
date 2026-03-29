@@ -1,0 +1,1 @@
+Repair Action ID,Transaction Date,Repair Number,Flow Section,Piece Identifier,Repair Group,Repair Step,Next Repair Step,Item Number,Item Client ID,Warehouse ID,Area,Storage Location,Device Code,Step Begin Date,Old Date,Last Inserted By,Date Last Modified,Last Modified By,Repair Batch,Make,Model

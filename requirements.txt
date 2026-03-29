@@ -1,0 +1,49 @@
+# Data Processing
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Web Scraping & API
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+selenium>=4.10.0
+lxml>=4.9.0
+
+# Database
+pyodbc>=4.0.0
+oracledb>=1.0.0
+psycopg2-binary>=2.9.0
+
+# PDF Processing
+PyPDF2>=3.0.0
+reportlab>=4.0.0
+
+# Machine Learning
+scikit-learn>=1.3.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Web Frameworks
+flask>=2.3.0
+fastapi>=0.100.0
+streamlit>=1.25.0
+
+# Configuration & Environment
+python-dotenv>=1.0.0
+
+# Automation
+pyautogui>=0.9.54
+pywin32>=306
+
+# Utilities
+openpyxl>=3.1.0  # Excel file support
+xlsxwriter>=3.1.0  # Excel writing
+pyarrow>=12.0.0  # Parquet file support
+
+# Testing (optional)
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# Code Quality (optional)
+flake8>=6.1.0
+black>=23.7.0
+mypy>=1.5.0
