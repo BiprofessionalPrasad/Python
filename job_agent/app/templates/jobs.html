@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Agent - Jobs</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #7c3aed;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --info-color: #3b82f6;
+        }
+        
+        body {
+            background-color: #f8fafc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            transform: translateY(-2px);
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-box {
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            padding: 15px 20px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .search-box:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.3);
+        }
+        
+        .job-card {
+            cursor: pointer;
+        }
+        
+        .job-card.saved {
+            border-left: 4px solid var(--warning-color);
+        }
+        
+        .job-card.applied {
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .company-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .badge-source {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        
+        .badge-linkedin { background-color: #0077b5; color: white; }
+        .badge-indeed { background-color: #2164f3; color: white; }
+        .badge-glassdoor { background-color: #0caa41; color: white; }
+        
+        .badge-remote {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .badge-job-type {
+            background-color: #f3e8ff;
+            color: #7c3aed;
+        }
+        
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .btn-save {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .btn-save.active {
+            background-color: #f59e0b;
+            color: white;
+        }
+        
+        .btn-apply {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .btn-apply.active {
+            background-color: #10b981;
+            color: white;
+        }
+        
+        .pagination .page-link {
+            border-radius: 8px;
+            margin: 0 2px;
+            border: none;
+            color: var(--primary-color);
+        }
+        
+        .pagination .page-item.active .page-link {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+        
+        .filter-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            background-color: #e0e7ff;
+            color: var(--primary-color);
+            border-radius: 20px;
+            font-size: 0.875rem;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .filter-chip .remove {
+            margin-left: 6px;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+        
+        .filter-chip .remove:hover {
+            opacity: 1;
+        }
+        
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .modal-header .btn-close {
+            filter: invert(1);
+        }
+        
+        .job-detail-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .job-detail-section h6 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-briefcase me-2"></i>Job Agent
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            <i class="fas fa-home me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/jobs">
+                            <i class="fas fa-search me-1"></i>Jobs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/applications">
+                            <i class="fas fa-clipboard-list me-1"></i>Applications
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/stats">
+                            <i class="fas fa-chart-bar me-1"></i>Stats
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container py-5">
+        <!-- Search Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body p-4">
+                        <h5 class="card-title mb-4">
+                            <i class="fas fa-search text-primary me-2"></i>Search Jobs
+                        </h5>
+                        
+                        <form id="searchForm">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control search-box" id="searchKeywords" 
+                                           placeholder="Job title, keywords, or company">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control search-box" id="searchLocation" 
+                                           placeholder="Location">
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="form-select search-box" id="searchSource">
+                                        <option value="">All Sources</option>
+                                        <option value="LinkedIn">LinkedIn</option>
+                                        <option value="Indeed">Indeed</option>
+                                        <option value="Glassdoor">Glassdoor</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="d-flex gap-2">
+                                        <button type="submit" class="btn btn-primary flex-fill">
+                                            <i class="fas fa-search me-2"></i>Filter
+                                        </button>
+                                        <button type="button" class="btn btn-outline-primary" id="btnScrape"
+                                          data-bs-toggle="modal" data-bs-target="#scrapeModal">
+                                            <i class="fas fa-sync-alt"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="filterRemote">
+                                        <label class="form-check-label" for="filterRemote">
+                                            <i class="fas fa-home me-1"></i>Remote only
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="filterSaved">
+                                        <label class="form-check-label" for="filterSaved">
+                                            <i class="fas fa-bookmark me-1"></i>Saved only
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="filterApplied">
+                                        <label class="form-check-label" for="filterApplied">
+                                            <i class="fas fa-check-circle me-1"></i>Applied
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Jobs List -->
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list text-primary me-2"></i>Job Listings
+                        <span class="badge bg-secondary ms-2" id="totalCount">0</span>
+                    </h5>
+                    <div class="d-flex gap-2">
+                        <select class="form-select form-select-sm" id="sortBy" style="width: auto;">
+                            <option value="date_desc">Newest First</option>
+                            <option value="date_asc">Oldest First</option>
+                            <option value="title">Title A-Z</option>
+                            <option value="company">Company A-Z</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="jobsContainer">
+                    <!-- Jobs will be loaded here -->
+                </div>
+                
+                <!-- Pagination -->
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center" id="pagination">
+                        <!-- Pagination will be inserted here -->
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scrape Modal -->
+    <div class="modal fade" id="scrapeModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-sync-alt me-2"></i>Scrape New Jobs
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="scrapeForm">
+                        <div class="mb-3">
+                            <label class="form-label">Keywords *</label>
+                            <input type="text" class="form-control" id="scrapeKeywords" 
+                                   placeholder="e.g., Software Engineer, Python Developer" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Location</label>
+                            <input type="text" class="form-control" id="scrapeLocation" 
+                                   placeholder="e.g., New York, Remote">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Job Type</label>
+                            <select class="form-select" id="scrapeJobType">
+                                <option value="">Any</option>
+                                <option value="full-time">Full-time</option>
+                                <option value="part-time">Part-time</option>
+                                <option value="contract">Contract</option>
+                                <option value="internship">Internship</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Sources</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="linkedin" 
+                                       id="sourceLinkedIn" checked>
+                                <label class="form-check-label" for="sourceLinkedIn">
+                                    <i class="fab fa-linkedin me-1"></i>LinkedIn
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="indeed" 
+                                       id="sourceIndeed" checked>
+                                <label class="form-check-label" for="sourceIndeed">
+                                    <i class="fas fa-briefcase me-1"></i>Indeed
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="glassdoor" 
+                                       id="sourceGlassdoor" checked>
+                                <label class="form-check-label" for="sourceGlassdoor">
+                                    <i class="fas fa-door-open me-1"></i>Glassdoor
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="scrapeRemote">
+                                <label class="form-check-label" for="scrapeRemote">
+                                    Remote jobs only
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Max Results per Source</label>
+                            <input type="number" class="form-control" id="scrapeMaxResults" 
+                                   value="25" min="5" max="100">
+                        </div>
+                    </form>
+                    
+                    <div id="scrapeResults" class="mt-3" style="display: none;">
+                        <div class="alert" role="alert">
+                            <div class="d-flex align-items-center">
+                                <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                                <span id="scrapeStatus">Searching...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="btnStartScrape">
+                        <i class="fas fa-play me-2"></i>Start Scraping
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Job Detail Modal -->
+    <div class="modal fade" id="jobDetailModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalJobTitle">Job Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                
+                <div class="modal-body" id="modalJobContent">
+                    <!-- Job details will be inserted here -->
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a href="#" class="btn btn-primary" id="modalApplyBtn" target="_blank">
+                        <i class="fas fa-external-link-alt me-2"></i>View Original
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentPage = 1;
+        let currentFilters = {};
+        
+        // Load jobs
+        async function loadJobs(page = 1) {
+            currentPage = page;
+            
+            const params = new URLSearchParams({
+                page: page,
+                per_page: 20
+            });
+            
+            // Add filters
+            if (currentFilters.search) params.append('search', currentFilters.search);
+            if (currentFilters.source) params.append('source', currentFilters.source);
+            if (currentFilters.location) params.append('location', currentFilters.location);
+            if (currentFilters.remote) params.append('remote', 'true');
+            if (currentFilters.saved) params.append('saved', 'true');
+            if (currentFilters.applied) params.append('applied', 'true');
+            
+            try {
+                const response = await fetch(`/api/jobs?${params}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayJobs(data.jobs);
+                    updatePagination(data.total, data.pages, data.current_page);
+                    document.getElementById('totalCount').textContent = data.total;
+                }
+            } catch (error) {
+                console.error('Error loading jobs:', error);
+            }
+        }
+        
+        function displayJobs(jobs) {
+            const container = document.getElementById('jobsContainer');
+            
+            if (jobs.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No jobs found</h5>
+                        <p class="text-muted">Try adjusting your filters or scrape new jobs</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '<div class="row">';
+            
+            jobs.forEach(job => {
+                const companyInitial = job.company ? job.company.charAt(0).toUpperCase() : '?';
+                const sourceClass = `badge-${job.source.toLowerCase()}`;
+                const savedClass = job.is_saved ? 'saved' : '';
+                const appliedClass = job.is_applied ? 'applied' : '';
+                const saveBtnClass = job.is_saved ? 'active' : '';
+                const applyBtnClass = job.is_applied ? 'active' : '';
+                
+                html += `
+                    <div class="col-12 mb-3">
+                        <div class="card job-card ${savedClass} ${appliedClass}" onclick="showJobDetail(${job.id})">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-start">
+                                    <div class="company-logo me-3 flex-shrink-0">
+                                        ${companyInitial}
+                                    </div>
+                                    
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h5 class="mb-1">${job.title}</h5>
+                                                <p class="text-muted mb-2">${job.company}</p>
+                                                
+                                                <div class="mb-2">
+                                                    <span class="badge badge-source ${sourceClass} me-2">${job.source}</span>
+                                                    ${job.remote ? '<span class="badge badge-remote me-2"><i class="fas fa-home me-1"></i>Remote</span>' : ''}
+                                                    ${job.job_type ? `<span class="badge badge-job-type">${job.job_type}</span>` : ''}
+                                                </div>
+                                                
+                                                <small class="text-muted">
+                                                    <i class="fas fa-map-marker-alt me-1"></i>${job.location || 'Location not specified'}
+                                                    ${job.salary ? `• <i class="fas fa-dollar-sign me-1"></i>${job.salary}` : ''}
+                                                </small>
+                                            </div>
+                                            
+                                            <div class="d-flex gap-2">
+                                                <button class="action-btn btn-save ${saveBtnClass}" 
+                                                        onclick="event.stopPropagation(); toggleSave(${job.id}, this)"
+                                                        title="${job.is_saved ? 'Remove from saved' : 'Save job'}">
+                                                    <i class="fas fa-bookmark"></i>
+                                                </button>
+                                                
+                                                <button class="action-btn btn-apply ${applyBtnClass}"
+                                                        onclick="event.stopPropagation(); toggleApply(${job.id}, this)"
+                                                        title="${job.is_applied ? 'Mark as not applied' : 'Mark as applied'}">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+        
+        function updatePagination(total, pages, current) {
+            const pagination = document.getElementById('pagination');
+            
+            if (pages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+            
+            let html = '';
+            
+            // Previous button
+            html += `
+                <li class="page-item ${current === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="loadJobs(${current - 1}); return false;">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+            `;
+            
+            // Page numbers
+            for (let i = 1; i <= pages; i++) {
+                if (i === 1 || i === pages || (i >= current - 2 && i <= current + 2)) {
+                    html += `
+                        <li class="page-item ${i === current ? 'active' : ''}">
+                            <a class="page-link" href="#" onclick="loadJobs(${i}); return false;">${i}</a>
+                        </li>
+                    `;
+                } else if (i === current - 3 || i === current + 3) {
+                    html += '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                }
+            }
+            
+            // Next button
+            html += `
+                <li class="page-item ${current === pages ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="loadJobs(${current + 1}); return false;">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            `;
+            
+            pagination.innerHTML = html;
+        }
+        
+        // Toggle save
+        async function toggleSave(jobId, btn) {
+            try {
+                const isSaved = btn.classList.contains('active');
+                
+                const response = await fetch(`/api/jobs/${jobId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ is_saved: !isSaved })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    btn.classList.toggle('active');
+                    
+                    // Update card border
+                    const card = btn.closest('.job-card');
+                    if (!isSaved) {
+                        card.classList.add('saved');
+                    } else {
+                        card.classList.remove('saved');
+                    }
+                }
+            } catch (error) {
+                console.error('Error toggling save:', error);
+            }
+        }
+        
+        // Toggle apply
+        async function toggleApply(jobId, btn) {
+            try {
+                const isApplied = btn.classList.contains('active');
+                
+                const response = await fetch(`/api/jobs/${jobId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ is_applied: !isApplied })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    btn.classList.toggle('active');
+                    
+                    // Update card border
+                    const card = btn.closest('.job-card');
+                    if (!isApplied) {
+                        card.classList.add('applied');
+                    } else {
+                        card.classList.remove('applied');
+                    }
+                }
+            } catch (error) {
+                console.error('Error toggling apply:', error);
+            }
+        }
+        
+        // Show job detail
+        async function showJobDetail(jobId) {
+            try {
+                const response = await fetch(`/api/jobs/${jobId}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const job = data.job;
+                    
+                    document.getElementById('modalJobTitle').textContent = job.title;
+                    document.getElementById('modalApplyBtn').href = job.source_url || '#';
+                    
+                    let content = `
+                        <div class="job-detail-section">
+                            <h6><i class="fas fa-building me-2"></i>Company</h6>
+                            <p>${job.company}</p>
+                        </div>
+                        
+                        <div class="job-detail-section">
+                            <h6><i class="fas fa-map-marker-alt me-2"></i>Location</h6>
+                            <p>${job.location || 'Not specified'}</p>
+                        </div>
+                        
+                        <div class="job-detail-section">
+                            <h6><i class="fas fa-info-circle me-2"></i>Details</h6>
+                            <div class="mb-2">
+                                <span class="badge badge-source badge-${job.source.toLowerCase()}">${job.source}</span>
+                                ${job.remote ? '<span class="badge badge-remote ms-2">Remote</span>' : ''}
+                                ${job.job_type ? `<span class="badge badge-job-type ms-2">${job.job_type}</span>` : ''}
+                            </div>
+                            ${job.salary ? `<p><strong>Salary:</strong> ${job.salary}</p>` : ''}
+                        </div>
+                    `;
+                    
+                    if (job.description) {
+                        content += `
+                            <div class="job-detail-section">
+                                <h6><i class="fas fa-align-left me-2"></i>Description</h6>
+                                <div class="p-3 bg-light rounded">${job.description}</div>
+                            </div>
+                        `;
+                    }
+                    
+                    if (job.requirements) {
+                        content += `
+                            <div class="job-detail-section">
+                                <h6><i class="fas fa-list-check me-2"></i>Requirements</h6>
+                                <div class="p-3 bg-light rounded">${job.requirements}</div>
+                            </div>
+                        `;
+                    }
+                    
+                    document.getElementById('modalJobContent').innerHTML = content;
+                    
+                    const modal = new bootstrap.Modal(document.getElementById('jobDetailModal'));
+                    modal.show();
+                }
+            } catch (error) {
+                console.error('Error loading job detail:', error);
+            }
+        }
+        
+        // Search form
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            currentFilters = {
+                search: document.getElementById('searchKeywords').value,
+                location: document.getElementById('searchLocation').value,
+                source: document.getElementById('searchSource').value,
+                remote: document.getElementById('filterRemote').checked,
+                saved: document.getElementById('filterSaved').checked,
+                applied: document.getElementById('filterApplied').checked
+            };
+            
+            loadJobs(1);
+        });
+        
+        // Scrape form
+        document.getElementById('btnStartScrape').addEventListener('click', async function() {
+            const keywords = document.getElementById('scrapeKeywords').value;
+            const location = document.getElementById('scrapeLocation').value;
+            const jobType = document.getElementById('scrapeJobType').value;
+            const remote = document.getElementById('scrapeRemote').checked;
+            const maxResults = document.getElementById('scrapeMaxResults').value;
+            
+            const sources = [];
+            if (document.getElementById('sourceLinkedIn').checked) sources.push('linkedin');
+            if (document.getElementById('sourceIndeed').checked) sources.push('indeed');
+            if (document.getElementById('sourceGlassdoor').checked) sources.push('glassdoor');
+            
+            if (!keywords) {
+                alert('Please enter keywords');
+                return;
+            }
+            
+            if (sources.length === 0) {
+                alert('Please select at least one source');
+                return;
+            }
+            
+            const resultsDiv = document.getElementById('scrapeResults');
+            const statusText = document.getElementById('scrapeStatus');
+            const spinner = resultsDiv.querySelector('.spinner-border');
+            
+            resultsDiv.style.display = 'block';
+            spinner.style.display = 'inline-block';
+            statusText.textContent = 'Searching across multiple sources...';
+            
+            try {
+                const response = await fetch('/api/search', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        keywords: keywords,
+                        location: location,
+                        job_type: jobType,
+                        remote: remote,
+                        sources: sources,
+                        max_results: parseInt(maxResults)
+                    })
+                });
+                
+                const data = await response.json();
+                
+                spinner.style.display = 'none';
+                
+                if (data.success) {
+                    statusText.innerHTML = `
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Found ${data.jobs_found} jobs (${data.jobs_saved} new saved)
+                    `;
+                    resultsDiv.querySelector('.alert').className = 'alert alert-success';
+                    
+                    // Reload jobs
+                    setTimeout(() => {
+                        loadJobs(1);
+                        bootstrap.Modal.getInstance(document.getElementById('scrapeModal')).hide();
+                    }, 1500);
+                } else {
+                    statusText.innerHTML = `
+                        <i class="fas fa-exclamation-circle text-danger me-2"></i>
+                        Error: ${data.error}
+                    `;
+                    resultsDiv.querySelector('.alert').className = 'alert alert-danger';
+                }
+            } catch (error) {
+                spinner.style.display = 'none';
+                statusText.innerHTML = `
+                    <i class="fas fa-exclamation-circle text-danger me-2"></i>
+                    Error: ${error.message}
+                `;
+                resultsDiv.querySelector('.alert').className = 'alert alert-danger';
+            }
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadJobs(1);
+        });
+    </script>
+</body>
+</html>
