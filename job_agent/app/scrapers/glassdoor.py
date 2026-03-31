@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from typing import List, Optional
 from .base import BaseScraper, JobData
+from datetime import datetime, timedelta
 import logging
 import re
 

@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from typing import List, Optional
+from datetime import datetime, timedelta
 from .base import BaseScraper, JobData
 import logging
 import re
@@ -193,8 +194,6 @@ class IndeedScraper(BaseScraper):
     
     def _parse_relative_date(self, date_text: str) -> Optional[datetime]:
         """Parse relative dates like '2 days ago'"""
-        from datetime import datetime, timedelta
-        import re
         
         try:
             date_text = date_text.lower()
